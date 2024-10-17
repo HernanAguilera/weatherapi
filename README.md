@@ -15,25 +15,31 @@
 docker-compose up -d
 ```
 
-2.Build the application:
+2. Copy the .env.example file to .env and fill in the values:
+
+```bash
+cp .env.example .env
+```
+
+3. Build the application:
 
 ```bash
 ./gradlew build
 ```
 
-3. Run the application:
+4. Run the application:
 
 ```bash
 ./gradlew run
 ```
 
-3. Open your browser and navigate to `http://localhost:8080`.
+5. Open your browser and navigate to `http://localhost:8080`.
 
-4. Request a weather for a location, for example: `http://localhost:8080/weather/santiago`
+6. Request a weather for a location, for example: `http://localhost:8080/weather/santiago`
 
-5. Stop the application `CTRL+C`
+7. Stop the application `CTRL+C`
 
-6. Remove REDIS container:
+8. Remove REDIS container:
 
 ```bash
 docker-compose down
