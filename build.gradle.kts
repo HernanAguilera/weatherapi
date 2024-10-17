@@ -6,6 +6,7 @@ val ktor_version: String by project
 plugins {
     kotlin("jvm") version "2.0.21"
     id("io.ktor.plugin") version "3.0.0"
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 group = "com.example"
@@ -30,6 +31,10 @@ dependencies {
 
     implementation("redis.clients:jedis:4.3.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.2")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
