@@ -9,6 +9,9 @@ import kotlinx.coroutines.launch
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -20,11 +23,26 @@ fun Application.module() {
     GlobalScope.launch {
         while (true) {
             for (location in locations) {
-                var weather = wheaterClient.getDataFromApi(location)
-                println(weather)
-                redisClient.setItem(location.lowercase(), weather.main.temp.toString())
+                var tryCount = 0
+                val maxTry = 2
+                var isThereError = false
+                do {
+                    tryCount++
+                    try {
+                        var weather = wheaterClient.getDataFromApi(location)
+                        redisClient.setItem(location.lowercase(), weather.main.temp.toString())
+                    } catch (e: Exception) {
+                        isThereError = true
+                        var currentTime = DateTimeFormatter
+                            .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+                            .withZone(ZoneOffset.UTC)
+                            .format(Instant.now())
+                        redisClient.setItem("Error: $currentTime", e.message.toString())
+                        println("Reintanando...")
+                    }
+                }while (isThereError && tryCount < maxTry)
             }
-            delay(30000) //
+            delay(300000) //
         }
     }
     install(ContentNegotiation) {

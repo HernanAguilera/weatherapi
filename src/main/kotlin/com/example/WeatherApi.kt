@@ -9,6 +9,7 @@ import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
 
 var locations = listOf<String>("Santiago", "Zurich", "Auckland", "Sidney", "London", "Georgia")
 
@@ -51,6 +52,9 @@ class WeatherApi {
             }
         }
 
+        if (Random.nextFloat() < 0.2) {
+            throw Exception("The API Request Failed trying $location")
+        }
         return client.get("https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${this.apiKey}&units=metric")
             .body()
     }
